@@ -1,12 +1,18 @@
 # FreeRTOS Project with Priority-Based Scheduling
 This project utilized an STM32L476RG microcontroller and configured it as follows:
 
--The SysClock was set to 80 MHz.
+-The SysClock was set to 80 MHz. 
+
 -UART 2 was activated for UART data transfer.
+
 -FreeRTOS was activated using CMSIS_V1 with default configuration.
+
 -Three tasks, namely "task1," "task2," and "task3," were created.
+
 -The timebase source was configured to Timer1 "TIM1."
+
 -Task 1 had below-normal priority (osPriorityBelowNormal), Task 2 had normal priority (osPriorityNormal), and Task 3 had real-time priority (osPriorityRealtime).
+
 -SEGGER System View was integrated into the project.
 
 This project serves as a demonstration of the straightforward nature of priority-based scheduling. In figure 1 from SEGGER System View, the SysTick interrupt, highlighted

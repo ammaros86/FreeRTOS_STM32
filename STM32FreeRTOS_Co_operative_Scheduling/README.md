@@ -1,4 +1,4 @@
-#FreeRTOS Project with Cooperative-Based Scheduling
+# FreeRTOS Project with Cooperative-Based Scheduling
 
 In this project, an STM32L476RG microcontroller was utilized and configured as follows:
 

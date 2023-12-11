@@ -1,4 +1,4 @@
-# STM32 FreeRTOS Project with Binary Semaphor  
+# FreeRTOS Project with Binary Semaphor  
 
 In this project, an STM32L476RG microcontroller was used and configured as follows:
 

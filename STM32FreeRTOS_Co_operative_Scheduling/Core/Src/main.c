@@ -44,9 +44,9 @@
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart2;
 
-osThreadId taska1Handle;
-osThreadId taska2Handle;
-
+osThreadId Task1Handle;
+osThreadId Task2Handle;
+osSemaphoreId myBinarySem01Handle;
 /* USER CODE BEGIN PV */
 uint8_t task1Data[] = "Task 01 \n";
 uint8_t task2Data[] = "Task 02 \n";
@@ -107,6 +107,11 @@ int main(void)
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
+  /* Create the semaphores(s) */
+  /* definition and creation of myBinarySem01 */
+  osSemaphoreDef(myBinarySem01);
+  myBinarySem01Handle = osSemaphoreCreate(osSemaphore(myBinarySem01), 1);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -120,17 +125,13 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-
-
-
+  /* definition and creation of Task1 */
   osThreadDef(Task1, StartTask1, osPriorityNormal, 0, 128);
-  taska1Handle = osThreadCreate(osThread(Task1), NULL);
+  Task1Handle = osThreadCreate(osThread(Task1), NULL);
 
   /* definition and creation of Task2 */
-  osThreadDef(Task2, StartTask2, osPriorityNormal, 0, 128);
-  taska2Handle = osThreadCreate(osThread(Task2), NULL);
-
+  osThreadDef(Task2, StartTask2, osPriorityIdle, 0, 128);
+  Task2Handle = osThreadCreate(osThread(Task2), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -243,12 +244,20 @@ static void MX_USART2_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin : PC13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
@@ -260,20 +269,21 @@ void printTaskText(const uint8_t * argument){
 }
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_StartTask1 */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the Task1 thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
+/* USER CODE END Header_StartTask1 */
 void StartTask1(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   for(;;)
   {
-	  printTaskText(task1Data);
+	  char *str = "Task 1 \n";
+	  printTaskText((uint8_t *)str);
 	  printTaskText(task1Data);
 	  printTaskText(task1Data);
 	  printTaskText(task1Data);
@@ -286,18 +296,23 @@ void StartTask1(void const * argument)
   /* USER CODE END 5 */
 }
 
+/* USER CODE BEGIN Header_StartTask2 */
+/**
+* @brief Function implementing the Task2 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask2 */
 void StartTask2(void const * argument)
 {
-  /* USER CODE BEGIN 5 */
+  /* USER CODE BEGIN StartTask2 */
   /* Infinite loop */
   for(;;)
   {
-	  printTaskText(task2Data);
-	  osThreadYield();
+    osDelay(1);
   }
-  /* USER CODE END 5 */
+  /* USER CODE END StartTask2 */
 }
-
 
 /**
   * @brief  Period elapsed callback in non blocking mode

@@ -492,19 +492,13 @@ void xPortSysTickHandler( void )
 	save and then restore the interrupt mask value as its value is already
 	known. */
 	portDISABLE_INTERRUPTS();
-  traceISR_ENTER();
 	{
 		/* Increment the RTOS tick. */
 		if( xTaskIncrementTick() != pdFALSE )
 		{
-			traceISR_EXIT_TO_SCHEDULER();
 			/* A context switch is required.  Context switching is performed in
 			the PendSV interrupt.  Pend the PendSV interrupt. */
 			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
-		}
-		else
-		{
-			traceISR_EXIT();
 		}
 	}
 	portENABLE_INTERRUPTS();
@@ -775,8 +769,6 @@ static void vPortEnableVFP( void )
 		of zero will result in unpredictable behaviour. */
 		configASSERT( ( portAIRCR_REG & portPRIORITY_GROUP_MASK ) <= ulMaxPRIGROUPValue );
 	}
-
-
 #if (configASSERT_DEFINED == 1)
 	void vSetVarulMaxPRIGROUPValue(void){
 #if( configASSERT_DEFINED == 1 )

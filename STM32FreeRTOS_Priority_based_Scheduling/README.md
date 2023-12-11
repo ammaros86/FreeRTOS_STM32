@@ -15,6 +15,7 @@ This project utilized an STM32L476RG microcontroller and configured it as follow
 
 -SEGGER System View was integrated into the project.
 
+
 This project serves as a demonstration of the straightforward nature of priority-based scheduling. In figure 1 from SEGGER System View, the SysTick interrupt, highlighted
 in red, occurs at a frequency of 1 ms. Task 3, with the highest priority, enters the "Ready" state first, prompting the scheduler to initiate its execution. After completing 
 its designated operations, Task 3 enters a blocked state for 3 ms using the osDelay(3) method. The image illustrates that Task 3 restarts after every 3 SysTick 

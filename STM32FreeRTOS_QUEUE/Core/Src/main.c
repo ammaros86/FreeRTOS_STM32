@@ -292,8 +292,7 @@ void StartSendTask(void const * argument)
 		   one item! */
 		  printTaskText((uint8_t *)"Could not send to the queue.\r\n");
 	   }
-// 	     osDelay(1000);
-  }
+   }
   /* USER CODE END 5 */
 }
 
